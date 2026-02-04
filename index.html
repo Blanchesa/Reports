@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jan-26 Sales Report - BlanChe</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --accent: #00cec9;
+            --high-value: #e17055;
+            --text-dark: #2d3436;
+            --text-gray: #636e72;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0; padding: 0;
+            color: var(--text-dark);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* --- Animations --- */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+            50% { box-shadow: 0 0 20px rgba(255,255,255,0.6); }
+            100% { box-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        }
+        @keyframes pulseGlowRed {
+             0% { box-shadow: 0 4px 10px rgba(225, 112, 85, 0.1); }
+             50% { box-shadow: 0 8px 25px rgba(225, 112, 85, 0.4); }
+             100% { box-shadow: 0 4px 10px rgba(225, 112, 85, 0.1); }
+        }
+
+        .animate-in { animation: slideUp 0.8s ease-out forwards; opacity: 0; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* --- Hero Section with Logo --- */
+        .hero-section {
+            background: linear-gradient(120deg, #6c5ce7 0%, #81ecec 100%);
+            color: white;
+            padding: 30px 5%;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 15px 35px rgba(108, 92, 231, 0.3);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg); pointer-events: none;
+        }
+
+        .header-branding { display: flex; align-items: center; gap: 20px; }
+        .logo-frame {
+            width: 80px; height: 80px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 3px solid rgba(255,255,255,0.5);
+            animation: pulseGlow 3s infinite;
+        }
+        .logo-img { width: 90%; height: 90%; object-fit: cover; border-radius: 50%; }
+        
+        .hero-content h1 { margin: 0; font-size: 1.8rem; font-weight: 400; opacity: 0.95; }
+        .hero-total {
+            margin: 5px 0 0 0; font-size: 4rem; font-weight: 900;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+        }
+        .hero-stats { display: flex; gap: 20px; }
+        .stat-box {
+            text-align: center; background: rgba(255,255,255,0.15);
+            padding: 15px 25px; border-radius: 20px;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.3s;
+        }
+        .stat-box:hover { background: rgba(255,255,255,0.25); transform: translateY(-5px); }
+        .stat-box i { font-size: 1.5rem; margin-bottom: 10px; opacity: 0.8; }
+        .stat-box strong { display: block; font-size: 1.6rem; }
+
+        /* --- Container & Titles --- */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 25px 50px 25px; }
+        .section-title {
+            font-size: 1.6rem; font-weight: 800; margin-bottom: 25px;
+            display: flex; align-items: center; gap: 15px; color: var(--text-dark);
+        }
+        .section-title i { color: var(--primary); background: rgba(108, 92, 231, 0.1); padding: 10px; border-radius: 12px; }
+
+        /* --- Clients Grid (Showing ALL) --- */
+        .clients-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; margin-bottom: 50px;
+        }
+        .client-card {
+            background: var(--card-bg); border-radius: 25px; padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            transition: all 0.4s ease; position: relative; border: 1px solid #f0f0f0;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .client-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(108, 92, 231, 0.15);
+        }
+        .client-header { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .client-icon {
+            width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white; box-shadow: 0 5px 15px rgba(108, 92, 231, 0.2);
+        }
+        .client-total { font-size: 1.6rem; font-weight: 900; margin-bottom: 5px; color: var(--text-dark); }
+        .client-name { color: var(--text-gray); font-weight: 700; margin-bottom: 15px; font-size: 1rem; height: 40px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;}
+
+        /* Progress Bar Style */
+        .progress-track {
+            background: #e0e0e0; height: 8px; border-radius: 10px;
+            overflow: hidden; margin-bottom: 5px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .progress-fill {
+            height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 10px; width: 0%; transition: width 1.5s ease-in-out;
+        }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-gray); font-weight: 600; margin-top: 5px;}
+
+        /* --- Invoices Grid & Search --- */
+        .search-container { position: relative; margin-bottom: 35px; }
+        .search-bar {
+            width: 100%; padding: 20px 60px 20px 30px; border-radius: 60px; border: none;
+            background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            font-size: 1.1rem; font-family: 'Tajawal'; outline: none; transition: 0.3s;
+        }
+        .search-bar:focus { box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2); transform: scale(1.01); }
+        .search-icon { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 1.4rem; }
+
+        .invoices-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        .invoice-card {
+            background: white; border-radius: 20px; padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; justify-content: space-between;
+            transition: 0.3s; position: relative; overflow: hidden;
+            border-bottom: 4px solid transparent;
+        }
+        .invoice-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .inv-header { display: flex; justify-content: space-between; font-size: 0.8rem; color: #b2bec3; margin-bottom: 10px; }
+        .inv-customer { font-weight: 700; font-size: 1rem; margin-bottom: 15px; line-height: 1.4; height: 42px; overflow: hidden; }
+        .inv-price { font-size: 1.4rem; font-weight: 900; color: var(--text-dark); align-self: flex-end; }
+
+        /* Special Cards */
+        .high-value-card {
+            background: linear-gradient(135deg, #fff 60%, #ffece6 100%);
+            border-bottom-color: var(--high-value);
+        }
+        .high-value-card .inv-price { color: var(--high-value); }
+        .super-high-value {
+            animation: pulseGlowRed 2s infinite ease-in-out;
+             border-bottom-color: var(--high-value);
+        }
+
+        /* --- Chart Section --- */
+        .chart-section {
+            background: white; border-radius: 30px; padding: 30px;
+            margin-bottom: 50px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hero-section animate-in">
+        <div class="header-branding">
+            <div class="logo-frame">
+                <img src="https://i.postimg.cc/bwM64NyV/6253346816734.jpg" alt="Beauty Logo" class="logo-img">
+            </div>
+            <div class="hero-content">
+                <h1>لوحة الأداء المالي</h1>
+                <div class="hero-total" id="heroTotal">0.00 SAR</div>
+                <div style="opacity: 0.8;">يناير 2026</div>
+            </div>
+        </div>
+        
+        <div class="hero-stats">
+            <div class="stat-box">
+                <i class="fas fa-receipt"></i>
+                <span>إجمالي الفواتير</span>
+                <strong id="heroCount">0</strong>
+            </div>
+            <div class="stat-box">
+                <i class="fas fa-trophy"></i>
+                <span>أعلى فاتورة</span>
+                <strong id="heroMax">0</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        
+        <div class="section-title animate-in delay-1"><i class="fas fa-chart-area"></i> تحليل النمو (Sales Trend)</div>
+        <div class="chart-section animate-in delay-1">
+            <canvas id="mainChart"></canvas>
+        </div>
+
+        <div class="section-title animate-in delay-2"><i class="fas fa-users"></i> أداء العملاء (All Customers Performance)</div>
+        <div class="clients-grid animate-in delay-2" id="clientsGrid">
+            </div>
+
+        <div class="section-title animate-in delay-3" style="margin-top: 60px;">
+            <i class="fas fa-stream"></i> 
+            سجل العمليات المباشر
+        </div>
+        
+        <div class="search-container animate-in delay-3">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-bar" id="search" placeholder="ابحث فورياً عن أي عميل، مبلغ، أو رقم فاتورة...">
+        </div>
+        
+        <div class="invoices-grid animate-in delay-3" id="invoicesGrid">
+            </div>
+
+    </div>
+
+    <script>
+        // ================= DATA SOURCE =================
+        const rawData = [
+            {id: "0006-517", date: "01/01", fullDate:"01/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 206295.11},
+            {id: "0006-518", date: "01/01", fullDate:"01/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 127179.07},
+            {id: "0006-519", date: "01/01", fullDate:"01/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 123191.37},
+            {id: "0006-520", date: "01/01", fullDate:"01/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 117893.56},
+            {id: "0006-521", date: "05/01", fullDate:"05/01/2026", customer: "الكيان فارما - ماي براند", value: 2325.00},
+            {id: "0006-522", date: "05/01", fullDate:"05/01/2026", customer: "الكيان فارما - ماي براند", value: 6256.56},
+            {id: "0006-523", date: "06/01", fullDate:"06/01/2026", customer: "عبدالله سعيد باوزير", value: 19094.40},
+            {id: "0006-524", date: "06/01", fullDate:"06/01/2026", customer: "دار الاميرات للتجارة", value: 22132.08},
+            {id: "0006-525", date: "06/01", fullDate:"06/01/2026", customer: "دار الاميرات للتجارة", value: 25201.92},
+            {id: "0006-526", date: "06/01", fullDate:"06/01/2026", customer: "Noon E-Commerce LLC", value: 13828.80},
+            {id: "0006-527", date: "07/01", fullDate:"07/01/2026", customer: "Noon E-Commerce LLC", value: 1866.00},
+            {id: "0006-528", date: "07/01", fullDate:"07/01/2026", customer: "Noon E-Commerce LLC", value: 26202.60},
+            {id: "0006-529", date: "07/01", fullDate:"07/01/2026", customer: "مخازن العناية المحدودة", value: 1902.00},
+            {id: "0006-530", date: "07/01", fullDate:"07/01/2026", customer: "مخازن العناية المحدودة", value: 22531.80},
+            {id: "0006-531", date: "10/01", fullDate:"10/01/2026", customer: "مخازن العناية المحدودة", value: 4398.00},
+            {id: "0006-532", date: "10/01", fullDate:"10/01/2026", customer: "مخازن العناية المحدودة", value: 276.00},
+            {id: "0006-533", date: "10/01", fullDate:"10/01/2026", customer: "سماء العلمية - اوكسجين", value: 4240.68},
+            {id: "0006-534", date: "10/01", fullDate:"10/01/2026", customer: "سماء العلمية - اوكسجين", value: 287.10},
+            {id: "0006-535", date: "10/01", fullDate:"10/01/2026", customer: "شركة ذي مار التجارية", value: 1194.60},
+            {id: "0006-536", date: "12/01", fullDate:"12/01/2026", customer: "بيت الصحة", value: 7918.60},
+            {id: "0006-537", date: "12/01", fullDate:"12/01/2026", customer: "بيت الصحة", value: 7363.20},
+            {id: "0006-538", date: "15/01", fullDate:"15/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 106371.68},
+            {id: "0006-539", date: "15/01", fullDate:"15/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 629933.00},
+            {id: "0006-540", date: "17/01", fullDate:"17/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 47698.17},
+            {id: "0006-541", date: "17/01", fullDate:"17/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 225371.00},
+            {id: "0006-544", date: "19/01", fullDate:"19/01/2026", customer: "نايس ون بيوتي", value: 8090.30},
+            {id: "0006-545", date: "19/01", fullDate:"19/01/2026", customer: "نايس ون بيوتي", value: 3445.00},
+            {id: "0006-546", date: "19/01", fullDate:"19/01/2026", customer: "نايس ون بيوتي", value: 641.50},
+            {id: "0006-547", date: "19/01", fullDate:"19/01/2026", customer: "نايس ون بيوتي", value: 21688.26},
+            {id: "0006-548", date: "19/01", fullDate:"19/01/2026", customer: "عبدالله سعيد باوزير", value: 3216.00},
+            {id: "0006-549", date: "20/01", fullDate:"20/01/2026", customer: "نايس ون بيوتي", value: 3869.25},
+            {id: "0006-550", date: "20/01", fullDate:"20/01/2026", customer: "Noon E-Commerce LLC", value: 33277.80},
+            {id: "0006-556", date: "28/01", fullDate:"28/01/2026", customer: "Noon E-Commerce LLC", value: 20844.00},
+            {id: "0006-557", date: "31/01", fullDate:"31/01/2026", customer: "مشاعر حور للتجارة", value: 4770.00},
+            {id: "0006-558", date: "31/01", fullDate:"31/01/2026", customer: "مشاعر حور للتجارة", value: 2481.00},
+            {id: "0006-559", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 18578.10},
+            {id: "0006-560", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 105284.03},
+            {id: "0006-561", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 42493.08},
+            {id: "0006-562", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 36398.19},
+            {id: "0006-563", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 18753.60},
+            {id: "0006-564", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 148453.98},
+            {id: "0006-565", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 29300.28}
+        ];
+
+        // ================= UTILS & PROCESSING =================
+        const fmt = (n) => n.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        const simpleName = (n) => {
+            if(n.includes("نينجا")) return "نينجا (Ninja)";
+            if(n.includes("Noon")) return "نون (Noon)";
+            if(n.includes("نايس ون")) return "نايس ون (Nice One)";
+            if(n.includes("الاميرات")) return "دار الأميرات";
+            if(n.includes("مخازن")) return "مخازن العناية";
+            if(n.includes("باوزير")) return "مؤسسة باوزير";
+            return n.split(' - ')[0] || n; 
+        };
+
+        let totalRevenue = 0;
+        let clientsMap = {};
+        let datesMap = {};
+        let maxInvoiceValue = 0;
+
+        rawData.forEach(item => {
+            totalRevenue += item.value;
+            if(item.value > maxInvoiceValue) maxInvoiceValue = item.value;
+
+            // Process Clients
+            let sName = simpleName(item.customer);
+            if(!clientsMap[sName]) clientsMap[sName] = {total: 0, count: 0};
+            clientsMap[sName].total += item.value;
+            clientsMap[sName].count++;
+
+            // Process Dates
+            if(!datesMap[item.date]) datesMap[item.date] = 0;
+            datesMap[item.date] += item.value;
+        });
+
+        // Sort Clients by Total Share
+        let sortedClients = Object.entries(clientsMap).sort((a,b) => b[1].total - a[1].total);
+
+        // ================= RENDERING =================
+        
+        // 1. Hero Section Update
+        document.getElementById('heroTotal').innerText = fmt(totalRevenue) + " SAR";
+        document.getElementById('heroCount').innerText = rawData.length;
+        document.getElementById('heroMax').innerText = fmt(maxInvoiceValue);
+
+        // 2. Client Cards (Render ALL of them)
+        const clientsGrid = document.getElementById('clientsGrid');
+        sortedClients.forEach(([name, data], index) => {
+            // Calculate Percentage Share
+            let sharePercent = ((data.total / totalRevenue) * 100).toFixed(1);
+            if(sharePercent < 1) sharePercent = sharePercent; // Keep small decimals for accuracy if needed
+            
+            let icon = 'fa-user-tag';
+            if(name.includes('نينجا')) icon = 'fa-bolt'; 
+            if(name.includes('نون')) icon = 'fa-shopping-cart';
+            if(name.includes('نايس')) icon = 'fa-heart';
+            if(name.includes('باوزير')) icon = 'fa-box-open';
+            if(name.includes('الاميرات')) icon = 'fa-crown';
+
+            clientsGrid.innerHTML += `
+                <div class="client-card">
+                    <div class="client-header">
+                        <div class="client-icon"><i class="fas ${icon}"></i></div>
+                        <div style="text-align:left">
+                            <span class="badge" style="background:#f0f2f5; color:#636e72; padding:5px 10px; border-radius:15px; font-size:0.8rem">
+                                ${data.count} فواتير
+                            </span>
+                        </div>
+                    </div>
+                    <div class="client-name">${name}</div>
+                    <div class="client-total">${fmt(data.total)} <small style="font-size:0.9rem; font-weight:400">SAR</small></div>
+                    
+                    <div class="progress-label">
+                        <span>حصة العميل</span>
+                        <span>${sharePercent}%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: 0%" data-width="${sharePercent}%"></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Trigger Progress Bar Animation
+        setTimeout(() => {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = bar.getAttribute('data-width');
+            });
+        }, 500);
+
+
+        // 3. Invoices Grid
+        const renderInvoices = (filterText = "") => {
+            const grid = document.getElementById('invoicesGrid');
+            grid.innerHTML = "";
+            
+            rawData.forEach(inv => {
+                let sName = simpleName(inv.customer);
+                if(filterText && !sName.toLowerCase().includes(filterText) && !inv.id.includes(filterText) && !inv.value.toString().includes(filterText)) return;
+
+                let cardClass = "";
+                if(inv.value > 100000) cardClass = "high-value-card super-high-value";
+                else if (inv.value > 20000) cardClass = "high-value-card";
+
+                grid.innerHTML += `
+                    <div class="invoice-card ${cardClass}">
+                        <div>
+                            <div class="inv-header">
+                                <span><i class="fas fa-hashtag"></i> ${inv.id}</span>
+                                <span><i class="far fa-calendar-alt"></i> ${inv.date}</span>
+                            </div>
+                            <div class="inv-customer">${sName}</div>
+                        </div>
+                        <div class="inv-price">
+                            ${fmt(inv.value)}
+                            <small style="font-size:0.8rem; color:gray;">SAR</small>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+        renderInvoices();
+
+        // 4. Chart
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        let sortedDates = Object.keys(datesMap).sort((a,b) => parseInt(a.split('/')[0]) - parseInt(b.split('/')[0]));
+        
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(108, 92, 231, 0.4)');
+        gradient.addColorStop(1, 'rgba(108, 92, 231, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedDates,
+                datasets: [{
+                    label: 'المبيعات اليومية',
+                    data: sortedDates.map(d => datesMap[d]),
+                    borderColor: '#6c5ce7',
+                    backgroundColor: gradient,
+                    borderWidth: 4,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#6c5ce7',
+                    pointRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { borderDash: [5, 5] }, beginAtZero: true },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
