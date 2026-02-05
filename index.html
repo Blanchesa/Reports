@@ -18,6 +18,8 @@
             --high-value: #e17055;
             --text-dark: #2d3436;
             --text-gray: #636e72;
+            --meshal-color: #0984e3;
+            --hala-color: #e84393;
         }
 
         body {
@@ -25,9 +27,7 @@
             background-color: var(--bg-color);
             margin: 0; padding: 0;
             color: var(--text-dark);
-            overflow-x: hidden; /* إخفاء التمرير العرضي */
-            
-            /* تم التعديل هنا: إجبار الجسم على عرض ثابت لضمان شكل الكمبيوتر */
+            overflow-x: hidden;
             min-width: 1440px; 
             width: 1440px;
         }
@@ -65,9 +65,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: nowrap; /* تم التعديل لمنع النزول للأسطر */
+            flex-wrap: nowrap;
             position: relative;
             overflow: hidden;
+            height: 220px;
         }
 
         .hero-section::before {
@@ -76,7 +77,7 @@
             transform: rotate(30deg); pointer-events: none;
         }
 
-        .header-branding { display: flex; align-items: center; gap: 20px; }
+        .header-branding { display: flex; align-items: center; gap: 20px; z-index: 2; }
         .logo-frame {
             width: 80px; height: 80px; background: white; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -88,17 +89,17 @@
         
         .hero-content h1 { margin: 0; font-size: 1.8rem; font-weight: 400; opacity: 0.95; }
         .hero-total {
-            margin: 5px 0 0 0; font-size: 4rem; font-weight: 900;
+            margin: 5px 0 0 0; font-size: 3.5rem; font-weight: 900;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
             white-space: nowrap;
         }
-        .hero-stats { display: flex; gap: 20px; }
+        .hero-stats { display: flex; gap: 20px; z-index: 2; }
         .stat-box {
             text-align: center; background: rgba(255,255,255,0.15);
             padding: 15px 25px; border-radius: 20px;
             backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2);
             transition: 0.3s;
-            min-width: 140px; /* ضمان عرض مناسب */
+            min-width: 140px;
         }
         .stat-box:hover { background: rgba(255,255,255,0.25); transform: translateY(-5px); }
         .stat-box i { font-size: 1.5rem; margin-bottom: 10px; opacity: 0.8; }
@@ -112,9 +113,53 @@
         }
         .section-title i { color: var(--primary); background: rgba(108, 92, 231, 0.1); padding: 10px; border-radius: 12px; }
 
+        /* --- PARTNERS SPLIT SECTION (NEW) --- */
+        .partners-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: -70px; /* Overlap with hero */
+            margin-bottom: 50px;
+            position: relative;
+            z-index: 10;
+        }
+        .partner-card {
+            background: white;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .partner-card:hover { transform: translateY(-5px); }
+        
+        .p-info { display: flex; align-items: center; gap: 20px; }
+        .p-icon {
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: white;
+        }
+        .p-name { font-size: 1.2rem; font-weight: 700; color: var(--text-gray); }
+        .p-label { font-size: 0.9rem; opacity: 0.7; }
+        .p-amount { font-size: 2rem; font-weight: 900; }
+
+        /* Hala Style */
+        .style-hala .p-icon { background: linear-gradient(135deg, #fd79a8, #e84393); box-shadow: 0 5px 15px rgba(232, 67, 147, 0.3); }
+        .style-hala .p-amount { color: var(--hala-color); }
+        .style-hala:hover { border-color: var(--hala-color); }
+
+        /* Meshal Style */
+        .style-meshal .p-icon { background: linear-gradient(135deg, #74b9ff, #0984e3); box-shadow: 0 5px 15px rgba(9, 132, 227, 0.3); }
+        .style-meshal .p-amount { color: var(--meshal-color); }
+        .style-meshal:hover { border-color: var(--meshal-color); }
+
+
         /* --- Clients Grid --- */
         .clients-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); /* إجبار 4 أعمدة */
+            display: grid; grid-template-columns: repeat(4, 1fr);
             gap: 20px; margin-bottom: 50px;
         }
         .client-card {
@@ -153,13 +198,13 @@
             width: 100%; padding: 20px 60px 20px 30px; border-radius: 60px; border: none;
             background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             font-size: 1.1rem; font-family: 'Tajawal'; outline: none; transition: 0.3s;
-            box-sizing: border-box; /* للتأكد من ان العرض صحيح */
+            box-sizing: border-box;
         }
         .search-bar:focus { box-shadow: 0 15px 35px rgba(108, 92, 231, 0.2); transform: scale(1.01); }
         .search-icon { position: absolute; left: 25px; top: 50%; transform: translateY(-50%); color: var(--primary); font-size: 1.4rem; }
 
         .invoices-grid {
-            display: grid; grid-template-columns: repeat(5, 1fr); /* إجبار 5 أعمدة */
+            display: grid; grid-template-columns: repeat(5, 1fr);
             gap: 20px;
         }
         .invoice-card {
@@ -225,6 +270,29 @@
 
     <div class="container">
         
+        <div class="partners-container animate-in delay-1">
+            <div class="partner-card style-hala">
+                <div class="p-info">
+                    <div class="p-icon"><i class="fas fa-female"></i></div>
+                    <div>
+                        <div class="p-name">هلا (Hala)</div>
+                        <div class="p-label">نصيب الشريك (50%)</div>
+                    </div>
+                </div>
+                <div class="p-amount" id="shareHala">0.00</div>
+            </div>
+
+            <div class="partner-card style-meshal">
+                <div class="p-info">
+                    <div class="p-icon"><i class="fas fa-male"></i></div>
+                    <div>
+                        <div class="p-name">مشعل (Meshal)</div>
+                        <div class="p-label">نصيب الشريك (50%)</div>
+                    </div>
+                </div>
+                <div class="p-amount" id="shareMeshal">0.00</div>
+            </div>
+        </div>
         <div class="section-title animate-in delay-1"><i class="fas fa-chart-area"></i> تحليل النمو (Sales Trend)</div>
         <div class="chart-section animate-in delay-1">
             <canvas id="mainChart"></canvas>
@@ -293,7 +361,9 @@
             {id: "0006-562", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 36398.19},
             {id: "0006-563", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 18753.60},
             {id: "0006-564", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 148453.98},
-            {id: "0006-565", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 29300.28}
+            {id: "0006-565", date: "31/01", fullDate:"31/01/2026", customer: "شركة تقنية التقدم - نينجا", value: 29300.28},
+            // Added Missing Invoice found in Image
+            {id: "0006-566", date: "31/01", fullDate:"31/01/2026", customer: "Alnahdi", value: 229315.00} 
         ];
 
         // ================= UTILS & PROCESSING =================
@@ -305,6 +375,7 @@
             if(n.includes("الاميرات")) return "دار الأميرات";
             if(n.includes("مخازن")) return "مخازن العناية";
             if(n.includes("باوزير")) return "مؤسسة باوزير";
+            if(n.includes("Alnahdi")) return "النهدي (Alnahdi)";
             return n.split(' - ')[0] || n; 
         };
 
@@ -338,12 +409,17 @@
         document.getElementById('heroCount').innerText = rawData.length;
         document.getElementById('heroMax').innerText = fmt(maxInvoiceValue);
 
-        // 2. Client Cards (Render ALL of them)
+        // 2. Partner Split Update (50/50)
+        let splitValue = totalRevenue / 2;
+        document.getElementById('shareHala').innerText = fmt(splitValue) + " SAR";
+        document.getElementById('shareMeshal').innerText = fmt(splitValue) + " SAR";
+
+        // 3. Client Cards
         const clientsGrid = document.getElementById('clientsGrid');
         sortedClients.forEach(([name, data], index) => {
             // Calculate Percentage Share
             let sharePercent = ((data.total / totalRevenue) * 100).toFixed(1);
-            if(sharePercent < 1) sharePercent = sharePercent; // Keep small decimals for accuracy if needed
+            if(sharePercent < 1) sharePercent = sharePercent; 
             
             let icon = 'fa-user-tag';
             if(name.includes('نينجا')) icon = 'fa-bolt'; 
@@ -351,6 +427,7 @@
             if(name.includes('نايس')) icon = 'fa-heart';
             if(name.includes('باوزير')) icon = 'fa-box-open';
             if(name.includes('الاميرات')) icon = 'fa-crown';
+            if(name.includes('النهدي')) icon = 'fa-clinic-medical';
 
             clientsGrid.innerHTML += `
                 <div class="client-card">
@@ -384,7 +461,7 @@
         }, 500);
 
 
-        // 3. Invoices Grid
+        // 4. Invoices Grid
         const renderInvoices = (filterText = "") => {
             const grid = document.getElementById('invoicesGrid');
             grid.innerHTML = "";
@@ -416,7 +493,12 @@
         };
         renderInvoices();
 
-        // 4. Chart
+        // Search Listener
+        document.getElementById('search').addEventListener('input', (e) => {
+            renderInvoices(e.target.value.toLowerCase());
+        });
+
+        // 5. Chart
         const ctx = document.getElementById('mainChart').getContext('2d');
         let sortedDates = Object.keys(datesMap).sort((a,b) => parseInt(a.split('/')[0]) - parseInt(b.split('/')[0]));
         
